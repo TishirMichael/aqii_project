@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Predictor AI</title>
+
+    <!-- Google Fonts for futuristic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-page="popular">
+
+    <!-- Background Elements -->
+    <div class="bg-abstract-shape shape-1"></div>
+    <div class="bg-abstract-shape shape-2"></div>
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+
+        <!-- Sidebar Navigation (Mocking the crypto/stock list from the reference) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="ph ph-wind"></i>
+                <span>AQI.AI</span>
+            </div>
+
+            <div class="sidebar-links" style="display: flex; gap: 10px; margin-bottom: 2rem; padding: 0 5px;">
+                <a href="index.html" class="glow-btn" style="padding: 8px 12px; font-size: 0.75rem; flex:1; justify-content:center; background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: none;"><i class="ph ph-house"></i> Home</a>
+                <a href="popular.html" class="glow-btn" style="padding: 8px 12px; font-size: 0.75rem; flex:1; justify-content:center; box-shadow: 0 0 10px rgba(0,240,255,0.4);"><i class="ph ph-star"></i> Popular</a>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label">POPULAR LOCATIONS</div>
+                <div class="location-btn active" data-state="Delhi" data-city="Delhi">
+                    <span class="loc-name">DEL Delhi</span>
+                    <span class="loc-tag severe">SEVERE</span>
+                </div>
+                <div class="location-btn" data-state="Maharashtra" data-city="Mumbai">
+                    <span class="loc-name">BOM Mumbai</span>
+                    <span class="loc-tag mod">MODERATE</span>
+                </div>
+                <div class="location-btn" data-state="Karnataka" data-city="Bengaluru">
+                    <span class="loc-name">BLR Bengaluru</span>
+                    <span class="loc-tag good">GOOD</span>
+                </div>
+                <div class="location-btn" data-state="Tamil Nadu" data-city="Chennai">
+                    <span class="loc-name">MAA Chennai</span>
+                    <span class="loc-tag good">GOOD</span>
+                </div>
+                <div class="location-btn" data-state="West Bengal" data-city="Kolkata">
+                    <span class="loc-name">CCU Kolkata</span>
+                    <span class="loc-tag poor">POOR</span>
+                </div>
+                <div class="location-btn" data-state="Telangana" data-city="Hyderabad">
+                    <span class="loc-name">HYD Hyderabad</span>
+                    <span class="loc-tag mod">MODERATE</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+
+            <!-- Hero Header -->
+            <header class="hero">
+                <div class="badge">
+                    <i class="ph-fill ph-sparkle"></i> AI-POWERED PREDICTIONS
+                </div>
+                <h1 class="hero-title">AQI Predictor <span class="glow-text">AI</span></h1>
+                <p class="hero-subtitle">Machine Learning Powered Air Quality Intelligence — Gradient Boosting,
+                    Auto-Regressive Lags & OWM Integration</p>
+            </header>
+
+            <!-- Control Panel -->
+            <section class="control-panel glass-panel">
+                <div class="input-group">
+                    <label><i class="ph ph-map-pin"></i> State</label>
+                    <select id="state-select">
+                        <option value="" disabled selected>Select State</option>
+                        <!-- Will be populated by JS -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label><i class="ph ph-buildings"></i> Area / City</label>
+                    <select id="city-select">
+                        <option value="" disabled selected>Select Area / City</option>
+                        <!-- Will be populated by JS -->
+                    </select>
+                </div>
+
+                <div class="action-group">
+                    <div class="model-tags">
+                        <span><i class="ph ph-chart-line-up"></i> Gradient Boost</span>
+                        <span><i class="ph ph-tree-structure"></i> RandomForest</span>
+                        <span class="active"><i class="ph ph-cpu"></i> AQI Model</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="hidden">
+                <div class="spinner"></div>
+                <p>Analyzing meteorological data and historical trends...</p>
+            </div>
+
+            <!-- Results Dashboard (Hidden Initially) -->
+            <section id="results-dashboard" class="hidden">
+
+                <div class="dashboard-header">
+                    <h2><i class="ph ph-calendar-blank"></i> 7-Day Forecast</h2>
+                    <span class="target-location" id="target-loc-display">Delhi, Delhi</span>
+                </div>
+
+                <!-- 7-Day Cards -->
+                <div class="forecast-cards" id="forecast-cards-container">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <!-- Metrics & Chart Row -->
+                <div class="metrics-chart-row">
+                    <!-- Metrics Column -->
+                    <div class="metrics-col">
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon max"><i class="ph ph-trend-up"></i></div>
+                            <div class="metric-data">
+                                <h3>Max AQI</h3>
+                                <div class="metric-val" id="metric-max">--</div>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon min"><i class="ph ph-trend-down"></i></div>
+                            <div class="metric-data">
+                                <h3>Min AQI</h3>
+                                <div class="metric-val" id="metric-min">--</div>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon avg"><i class="ph ph-waves"></i></div>
+                            <div class="metric-data">
+                                <h3>Avg AQI</h3>
+                                <div class="metric-val" id="metric-avg">--</div>
+                            </div>
+                        </div>
+                        <div class="metric-card glass-panel">
+                            <div class="metric-icon alert"><i class="ph ph-warning-circle"></i></div>
+                            <div class="metric-data">
+                                <h3>Worst Category</h3>
+                                <div class="metric-val cat" id="metric-cat">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Column -->
+                    <div class="chart-col glass-panel">
+                        <div class="chart-header">
+                            <h3><i class="ph ph-chart-line"></i> AQI Trend Analysis</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="aqiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Table -->
+                <div class="details-section glass-panel">
+                    <h3><i class="ph ph-flask"></i> Full Pollutant Details</h3>
+                    <div class="table-responsive">
+                        <table id="details-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>AQI</th>
+                                    <th>Category</th>
+                                    <th>PM2.5</th>
+                                    <th>PM10</th>
+                                    <th>NO₂</th>
+                                    <th>O₃</th>
+                                    <th>SO₂</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

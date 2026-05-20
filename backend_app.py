@@ -90,13 +90,13 @@ def load_artifacts():
         le_poll  = joblib.load(FILES["label_encoder_pollutant.pkl"])
         
         df = pd.read_csv(FILES["aqi.csv"])
-        df["date"]  = pd.to_datetime(df["date"], errors="coerce")
         df["state"] = df["state"].astype(str).str.strip().str.title()
         df["area"]  = df["area"].astype(str).str.strip().str.title()
         df["prominent_pollutants"] = df["prominent_pollutants"].astype(str).str.strip().str.title()
         df = df[(df["aqi_value"] >= 0) & (df["aqi_value"] <= 500)]
-        df.dropna(subset=["date", "aqi_value", "state", "area"], inplace=True)
-        df.sort_values(["area", "date"], inplace=True)
+        df.dropna(subset=["aqi_value", "state", "area"], inplace=True)
+        # Sort by area so the tail(60) grabs the most recent (assuming original CSV is chronological)
+        df.sort_values(["area"], inplace=True)
         if "number_of_monitoring_stations" in df.columns:
             df["monitoring_stations"] = df["number_of_monitoring_stations"].fillna(1).astype(int)
         else:
